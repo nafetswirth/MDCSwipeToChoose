@@ -40,7 +40,9 @@
 
         _threshold = 100.f;
       
-        _allowedSwipeDirections = MDCSwipeDirectionUp | MDCSwipeDirectionDown | MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
+      //        _allowedSwipeDirections = MDCSwipeDirectionUp | MDCSwipeDirectionDown | MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
+      
+      _allowedSwipeDirections = MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
     }
     return self;
 }
