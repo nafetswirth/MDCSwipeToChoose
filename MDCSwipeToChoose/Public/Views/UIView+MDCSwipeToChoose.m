@@ -28,6 +28,8 @@
 #import "MDCGeometry.h"
 #import <objc/runtime.h>
 
+#define HAS_OPT(options, opt) ((options & opt) == opt)
+
 const void * const MDCSwipeOptionsKey = &MDCSwipeOptionsKey;
 const void * const MDCViewStateKey = &MDCViewStateKey;
 
@@ -114,6 +116,8 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
 - (void)mdc_finalizePosition {
     MDCSwipeDirection direction = [self mdc_directionOfExceededThreshold];
     switch (direction) {
+        case MDCSwipeDirectionUp:
+        case MDCSwipeDirectionDown:
         case MDCSwipeDirectionRight:
         case MDCSwipeDirectionLeft: {
             CGPoint translation = MDCCGPointSubtract(self.center,
@@ -170,10 +174,22 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
         CGFloat thresholdRatio = MIN(1.f, fabsf(translation.x)/self.mdc_options.threshold);
 
         MDCSwipeDirection direction = MDCSwipeDirectionNone;
+      
         if (translation.x > 0.f) {
+          
             direction = MDCSwipeDirectionRight;
+          
         } else if (translation.x < 0.f) {
+          
             direction = MDCSwipeDirectionLeft;
+          
+        } else if (translation.y > 0.f) {
+          
+            direction = MDCSwipeDirectionUp;
+          
+        } else if(translation.y < 0.f) {
+          
+            direction = MDCSwipeDirectionDown;
         }
 
         MDCPanState *state = [MDCPanState new];
@@ -205,6 +221,10 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
             return CGPointMake(-offset, 0);
         case MDCSwipeDirectionRight:
             return CGPointMake(offset, 0);
+        case MDCSwipeDirectionUp:
+            return CGPointMake(0, -offset);
+        case MDCSwipeDirectionDown:
+            return CGPointMake(0, offset);
         default:
             [NSException raise:NSInternalInconsistencyException
                         format:@"Invallid direction argument."];
@@ -213,13 +233,28 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
 }
 
 - (MDCSwipeDirection)mdc_directionOfExceededThreshold {
-    if (self.center.x > self.mdc_viewState.originalCenter.x + self.mdc_options.threshold) {
-        return MDCSwipeDirectionRight;
-    } else if (self.center.x < self.mdc_viewState.originalCenter.x - self.mdc_options.threshold) {
-        return MDCSwipeDirectionLeft;
-    } else {
-        return MDCSwipeDirectionNone;
-    }
+  
+  MDCSwipeDirection directions = [self mdc_options].allowedSwipeDirections;
+  
+  if (HAS_OPT(directions, MDCSwipeDirectionRight) && self.center.x > self.mdc_viewState.originalCenter.x + self.mdc_options.threshold) {
+    
+    return MDCSwipeDirectionRight;
+    
+  } else if (HAS_OPT(directions, MDCSwipeDirectionLeft) && self.center.x < self.mdc_viewState.originalCenter.x - self.mdc_options.threshold) {
+    
+    return MDCSwipeDirectionLeft;
+    
+  } else if (HAS_OPT(directions, MDCSwipeDirectionUp) && self.center.y < self.mdc_viewState.originalCenter.y - self.mdc_options.threshold) {
+    
+    return MDCSwipeDirectionUp;
+    
+  } else if (HAS_OPT(directions, MDCSwipeDirectionDown) && self.center.y > self.mdc_viewState.originalCenter.y + self.mdc_options.threshold) {
+    
+    return MDCSwipeDirectionDown;
+    
+  } else {
+    return MDCSwipeDirectionNone;
+  }
 }
 
 #pragma mark Gesture Recognizer Events

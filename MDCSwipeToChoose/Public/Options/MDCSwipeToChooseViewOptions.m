@@ -39,6 +39,8 @@
         _nopeRotationAngle = 15.f;
 
         _threshold = 100.f;
+      
+        _allowedSwipeDirections = MDCSwipeDirectionUp | MDCSwipeDirectionDown | MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
     }
     return self;
 }

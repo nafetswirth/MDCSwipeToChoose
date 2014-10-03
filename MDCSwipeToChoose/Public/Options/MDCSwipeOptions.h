@@ -23,6 +23,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MDCSwipeDirection.h"
 
 @class MDCPanState;
 @class MDCSwipeResult;
@@ -56,7 +57,7 @@ typedef void (^MDCSwipeToChooseOnChosenBlock)(MDCSwipeResult *state);
 @property (nonatomic, assign) UIViewAnimationOptions swipeCancelledAnimationOptions;
 
 /*!
- * THe duration of the animation that moves a view to its threshold, caused when `mdc_swipe:`
+ * The duration of the animation that moves a view to its threshold, caused when `mdc_swipe:`
  * is called. A default value is provided in the `-init` method.
  */
 @property (nonatomic, assign) NSTimeInterval swipeAnimationDuration;
@@ -80,6 +81,12 @@ typedef void (^MDCSwipeToChooseOnChosenBlock)(MDCSwipeResult *state);
  * the angle of rotation.
  */
 @property (nonatomic, assign) CGFloat rotationFactor;
+
+/*!
+ * Contains the directions on which the swipe will be recognized
+ * Must be set using a OR operator (like MDCSwipeDirectionUp | MDCSwipeDirectionDown)
+ */
+@property (nonatomic, assign) MDCSwipeDirection allowedSwipeDirections;
 
 /*!
  * A callback to be executed when the view is panned. The block takes an instance of
