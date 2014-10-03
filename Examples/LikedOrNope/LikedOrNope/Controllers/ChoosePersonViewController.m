@@ -159,8 +159,15 @@ static const CGFloat ChoosePersonButtonVerticalPadding = 20.f;
     // a delegate, and provide a custom callback that moves the back card view
     // based on how far the user has panned the front card view.
     MDCSwipeToChooseViewOptions *options = [MDCSwipeToChooseViewOptions new];
+  
     options.delegate = self;
     options.threshold = 160.f;
+  
+    // Choose Allowed Swipe Directions
+    // options.allowedSwipeDirections = MDCSwipeDirectionLeft | MDCSwipeDirectionRight | MDCSwipeDirectionUp | MDCSwipeDirectionDown;
+  
+    options.allowedSwipeDirections = MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
+  
     options.onPan = ^(MDCPanState *state){
         CGRect frame = [self backCardViewFrame];
         self.backCardView.frame = CGRectMake(frame.origin.x,
