@@ -172,26 +172,33 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
 - (void)mdc_executeOnPanBlockForTranslation:(CGPoint)translation {
     if (self.mdc_options.onPan) {
         CGFloat thresholdRatio = MIN(1.f, fabsf(translation.x)/self.mdc_options.threshold);
-
+        CGFloat upDownthresholdRatio = MIN(1.f, fabsf(translation.y / self.mdc_options.threshold));
+        thresholdRatio = MAX(thresholdRatio, upDownthresholdRatio);
+        
         MDCSwipeDirection direction = MDCSwipeDirectionNone;
-      
-        if (translation.x > 0.f) {
-          
-            direction = MDCSwipeDirectionRight;
-          
-        } else if (translation.x < 0.f) {
-          
-            direction = MDCSwipeDirectionLeft;
-          
-        } else if (translation.y > 0.f) {
-          
-            direction = MDCSwipeDirectionUp;
-          
-        } else if(translation.y < 0.f) {
-          
-            direction = MDCSwipeDirectionDown;
+        
+        if (fabsf(translation.x) > fabsf(translation.y)) {
+            if (translation.x > 0.f) {
+                
+                direction = MDCSwipeDirectionRight;
+                
+            } else if (translation.x < 0.f) {
+                
+                direction = MDCSwipeDirectionLeft;
+                
+            }
+        } else if (fabsf(translation.x) < fabsf(translation.y)) {
+            if (translation.y > 0.f) {
+                
+                direction = MDCSwipeDirectionUp;
+                
+            } else if(translation.y < 0.f) {
+                
+                direction = MDCSwipeDirectionDown;
+            }
         }
-
+        
+        
         MDCPanState *state = [MDCPanState new];
         state.view = self;
         state.direction = direction;
