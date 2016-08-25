@@ -20,6 +20,7 @@
 @protocol MDCSwipeToChooseDelegate <NSObject>
 @optional
 
+-(void)viewDidStartSwipe:(UIView *)view;
 /*!
  * Sent when a view was not swiped past the selection threshold. The view is
  * returned to its original position before this message is sent.

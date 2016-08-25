@@ -271,7 +271,10 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
 
     if (panGestureRecognizer.state == UIGestureRecognizerStateBegan) {
         self.mdc_viewState.originalCenter = view.center;
-
+        id<MDCSwipeToChooseDelegate> delegate = self.mdc_options.delegate;
+        if ([delegate respondsToSelector:@selector(viewDidStartSwipe:)]) {
+            [delegate viewDidStartSwipe:self];
+        }
         // If the pan gesture originated at the top half of the view, rotate the view
         // away from the center. Otherwise, rotate towards the center.
         if ([panGestureRecognizer locationInView:view].y < view.center.y) {
