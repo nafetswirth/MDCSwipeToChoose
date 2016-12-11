@@ -23,6 +23,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MDCSwipeDirection.h"
 
 typedef CGFloat MDCRotationDirection;
 extern const MDCRotationDirection MDCRotationAwayFromCenter;
@@ -43,5 +44,7 @@ extern const MDCRotationDirection MDCRotationTowardsCenter;
  * original center, and this takes on a value of -1.
  */
 @property (nonatomic, assign) MDCRotationDirection rotationDirection;
+
+@property (nonatomic, assign) MDCSwipeDirection lastDirection;
 
 @end

@@ -170,39 +170,41 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
 }
 
 - (void)mdc_executeOnPanBlockForTranslation:(CGPoint)translation {
-    if (self.mdc_options.onPan) {
-        CGFloat thresholdRatio = MIN(1.f, fabsf(translation.x)/self.mdc_options.threshold);
-        CGFloat upDownthresholdRatio = MIN(1.f, fabsf(translation.y / self.mdc_options.threshold));
-        thresholdRatio = MAX(thresholdRatio, upDownthresholdRatio);
-        
-        MDCSwipeDirection direction = MDCSwipeDirectionNone;
-        
-        if (fabsf(translation.x) > fabsf(translation.y)) {
-            if (translation.x > 0.f) {
-                
-                direction = MDCSwipeDirectionRight;
-                
-            } else if (translation.x < 0.f) {
-                
-                direction = MDCSwipeDirectionLeft;
-                
-            }
-        } else if (fabsf(translation.x) < fabsf(translation.y)) {
-            if (translation.y > 0.f) {
-                
-                direction = MDCSwipeDirectionUp;
-                
-            } else if(translation.y < 0.f) {
-                
-                direction = MDCSwipeDirectionDown;
-            }
+    CGFloat thresholdRatio = MIN(1.f, fabsf(translation.x)/self.mdc_options.threshold);
+    CGFloat upDownthresholdRatio = MIN(1.f, fabsf(translation.y / self.mdc_options.threshold));
+    thresholdRatio = MAX(thresholdRatio, upDownthresholdRatio);
+    
+    MDCSwipeDirection direction = MDCSwipeDirectionNone;
+    
+    if (fabsf(translation.x) > fabsf(translation.y)) {
+        if (translation.x > 0.f) {
+            
+            direction = MDCSwipeDirectionRight;
+            
+        } else if (translation.x < 0.f) {
+            
+            direction = MDCSwipeDirectionLeft;
+            
         }
-        
-        
-        MDCPanState *state = [MDCPanState new];
-        state.view = self;
-        state.direction = direction;
-        state.thresholdRatio = thresholdRatio;
+    } else if (fabsf(translation.x) < fabsf(translation.y)) {
+        if (translation.y > 0.f) {
+            //changed
+            direction = MDCSwipeDirectionDown;
+            
+        } else if(translation.y < 0.f) {
+            //changed
+            direction = MDCSwipeDirectionUp;
+        }
+    }
+    
+    
+    MDCPanState *state = [MDCPanState new];
+    state.view = self;
+    state.direction = direction;
+    self.mdc_viewState.lastDirection = direction;
+    state.thresholdRatio = thresholdRatio;
+    
+    if (self.mdc_options.onPan) {
         self.mdc_options.onPan(state);
     }
 }
@@ -240,28 +242,28 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
 }
 
 - (MDCSwipeDirection)mdc_directionOfExceededThreshold {
-  
-  MDCSwipeDirection directions = [self mdc_options].allowedSwipeDirections;
-  
-  if (HAS_OPT(directions, MDCSwipeDirectionRight) && self.center.x > self.mdc_viewState.originalCenter.x + self.mdc_options.threshold) {
     
-    return MDCSwipeDirectionRight;
+    MDCSwipeDirection directions = [self mdc_options].allowedSwipeDirections;
     
-  } else if (HAS_OPT(directions, MDCSwipeDirectionLeft) && self.center.x < self.mdc_viewState.originalCenter.x - self.mdc_options.threshold) {
-    
-    return MDCSwipeDirectionLeft;
-    
-  } else if (HAS_OPT(directions, MDCSwipeDirectionUp) && self.center.y < self.mdc_viewState.originalCenter.y - self.mdc_options.threshold) {
-    
-    return MDCSwipeDirectionUp;
-    
-  } else if (HAS_OPT(directions, MDCSwipeDirectionDown) && self.center.y > self.mdc_viewState.originalCenter.y + self.mdc_options.threshold) {
-    
-    return MDCSwipeDirectionDown;
-    
-  } else {
-    return MDCSwipeDirectionNone;
-  }
+    if (self.mdc_viewState.lastDirection == MDCSwipeDirectionRight && self.center.x > self.mdc_viewState.originalCenter.x + self.mdc_options.threshold) {
+        
+        return MDCSwipeDirectionRight;
+        
+    } else if (self.mdc_viewState.lastDirection == MDCSwipeDirectionLeft && self.center.x < self.mdc_viewState.originalCenter.x - self.mdc_options.threshold) {
+        
+        return MDCSwipeDirectionLeft;
+        
+    } else if (self.mdc_viewState.lastDirection == MDCSwipeDirectionUp && self.center.y < self.mdc_viewState.originalCenter.y - self.mdc_options.threshold) {
+        
+        return MDCSwipeDirectionUp;
+        
+    } else if (self.mdc_viewState.lastDirection == MDCSwipeDirectionDown && self.center.y > self.mdc_viewState.originalCenter.y + self.mdc_options.threshold) {
+        
+        return MDCSwipeDirectionDown;
+        
+    } else {
+        return MDCSwipeDirectionNone;
+    }
 }
 
 #pragma mark Gesture Recognizer Events
