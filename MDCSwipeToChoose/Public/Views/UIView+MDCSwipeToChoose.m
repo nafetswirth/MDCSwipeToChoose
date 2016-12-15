@@ -175,25 +175,28 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
     thresholdRatio = MAX(thresholdRatio, upDownthresholdRatio);
     
     MDCSwipeDirection direction = MDCSwipeDirectionNone;
+    NSArray *options = [self mdc_options]._allowedSwipeDirections;
     
     if (fabsf(translation.x) > fabsf(translation.y)) {
         if (translation.x > 0.f) {
-            
-            direction = MDCSwipeDirectionRight;
-            
+            if ([options filteredArrayUsingPredicate:[self predicateForSwipeDirection:MDCSwipeDirectionRight]].count > 0) {
+                direction = MDCSwipeDirectionRight;
+            }
         } else if (translation.x < 0.f) {
-            
-            direction = MDCSwipeDirectionLeft;
-            
+            if ([options filteredArrayUsingPredicate:[self predicateForSwipeDirection:MDCSwipeDirectionLeft]].count > 0) {
+                direction = MDCSwipeDirectionLeft;
+            }
         }
     } else if (fabsf(translation.x) < fabsf(translation.y)) {
         if (translation.y > 0.f) {
-            //changed
-            direction = MDCSwipeDirectionDown;
+            if ([options filteredArrayUsingPredicate:[self predicateForSwipeDirection:MDCSwipeDirectionDown]].count > 0) {
+                direction = MDCSwipeDirectionDown;
+            }
             
         } else if(translation.y < 0.f) {
-            //changed
-            direction = MDCSwipeDirectionUp;
+            if ([options filteredArrayUsingPredicate:[self predicateForSwipeDirection:MDCSwipeDirectionUp]].count > 0) {
+                direction = MDCSwipeDirectionUp;
+            }
         }
     }
     
@@ -201,12 +204,20 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
     MDCPanState *state = [MDCPanState new];
     state.view = self;
     state.direction = direction;
-    self.mdc_viewState.lastDirection = direction;
+    
+    if (direction != MDCSwipeDirectionNone) {
+        self.mdc_viewState.lastDirection = direction;
+    }
+    
     state.thresholdRatio = thresholdRatio;
     
     if (self.mdc_options.onPan) {
         self.mdc_options.onPan(state);
     }
+}
+
+- (NSPredicate *) predicateForSwipeDirection:(MDCSwipeDirection) swipeDirection {
+    return [NSPredicate predicateWithFormat:@"SELF = %@", [NSNumber numberWithInteger:swipeDirection]];
 }
 
 #pragma mark Rotation

@@ -88,6 +88,9 @@ typedef void (^MDCSwipeToChooseOnChosenBlock)(MDCSwipeResult *state);
  */
 @property (nonatomic, assign) MDCSwipeDirection allowedSwipeDirections;
 
+//added
+@property (nonatomic, assign) NSArray<NSNumber *> *_allowedSwipeDirections;
+
 /*!
  * A callback to be executed when the view is panned. The block takes an instance of
  * `MDCPanState` as an argument. Use this `state` instance to determine the pan direction
