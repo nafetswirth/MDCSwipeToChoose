@@ -175,7 +175,7 @@ const void * const MDCViewStateKey = &MDCViewStateKey;
     thresholdRatio = MAX(thresholdRatio, upDownthresholdRatio);
     
     MDCSwipeDirection direction = MDCSwipeDirectionNone;
-    NSArray *options = [self mdc_options]._allowedSwipeDirections;
+    NSArray *options = [self mdc_options].nallowedSwipeDirections;
     
     if (fabsf(translation.x) > fabsf(translation.y)) {
         if (translation.x > 0.f) {

@@ -40,6 +40,13 @@
         _rotationFactor = 3.f;
 
         _allowedSwipeDirections = MDCSwipeDirectionUp | MDCSwipeDirectionDown | MDCSwipeDirectionLeft | MDCSwipeDirectionRight;
+        
+        _nallowedSwipeDirections = @[
+                                     [NSNumber numberWithInteger: MDCSwipeDirectionUp],
+                                     [NSNumber numberWithInteger: MDCSwipeDirectionDown],
+                                     [NSNumber numberWithInteger: MDCSwipeDirectionLeft],
+                                     [NSNumber numberWithInteger: MDCSwipeDirectionRight]
+                                     ];
 
         _onChosen = [[self class] exitScreenOnChosenWithDuration:0.1
                                                          options:UIViewAnimationOptionCurveLinear];

@@ -89,7 +89,7 @@ typedef void (^MDCSwipeToChooseOnChosenBlock)(MDCSwipeResult *state);
 @property (nonatomic, assign) MDCSwipeDirection allowedSwipeDirections;
 
 //added
-@property (nonatomic, assign) NSArray<NSNumber *> *_allowedSwipeDirections;
+@property (nonatomic, assign) NSArray<NSNumber *> *nallowedSwipeDirections;
 
 /*!
  * A callback to be executed when the view is panned. The block takes an instance of
